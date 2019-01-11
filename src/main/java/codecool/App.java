@@ -14,6 +14,7 @@ public class App
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
 
         server.createContext("/form", new Form());
+        server.createContext("/hello", new Hello());
         server.setExecutor(null);
 
         server.start();

@@ -38,14 +38,14 @@
 
         {% for key, value in hashMap %}
 
-        <div class="post">
-            <div class="header">
-                {{ key }}
+            <div class="post">
+                <div class="header">
+                    {{ key }} - {{ time }}
+                </div>
+                <div class="message">
+                    {{ value }}
+                </div>
             </div>
-            <div class="message">
-                {{ value }}
-            </div>
-        </div>
 
         {% endfor %}
 
