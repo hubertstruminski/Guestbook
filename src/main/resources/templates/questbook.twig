@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guestbook</title>
+
+    <style>
+        .post
+        {
+            width: 300px;
+            height: 100px;
+            background-color: red;
+            color: black;
+            font-size: 22px;
+        }
+        .header
+        {
+            width: 300px;
+            height: 25px;
+            background-color: green;
+        }
+        .message
+        {
+            width: 300px;
+            height: 75px;
+            background-color: red;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+    <h1>Simple Guestbook</h1>
+
+    <div id="container">
+
+        {% for key, value in hashMap %}
+
+        <div class="post">
+            <div class="header">
+                {{ key }}
+            </div>
+            <div class="message">
+                {{ value }}
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <form method="post">
+
+        Message  <br/>
+        <textarea cols="30" rows="15" name="txtArea"></textarea> <br/>
+        Name <br/>
+        <input type="text" name="txtName" /> <br/>
+        <input type="submit" id="btnForm" value="Submit" />
+
+    </form>
+
+</body>
+</html>
