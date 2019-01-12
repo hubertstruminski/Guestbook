@@ -1,5 +1,7 @@
 package DAO;
 
+import Model.Post;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import static DAO.ConnectorDatabase.connect;
 
 public class DataPosts implements IDataPosts{
 
-    public void insertRecord(String name, String message) throws IOException {
+    public void insertRecord(String name, String message, String data) throws IOException {
         Statement stmt = null;
         PreparedStatement insertStatement = null;
         try {
@@ -20,10 +22,11 @@ public class DataPosts implements IDataPosts{
 
             stmt = c.createStatement();
 
-            insertStatement = c.prepareStatement("INSERT INTO public.posts(name, message) VALUES (?, ?);");
+            insertStatement = c.prepareStatement("INSERT INTO public.posts(name, message, data) VALUES (?, ?, ?);");
 
             insertStatement.setString(1, name);
             insertStatement.setString(2, message);
+            insertStatement.setString(3, data);
 
             insertStatement.addBatch();
             insertStatement.executeBatch();
@@ -37,20 +40,22 @@ public class DataPosts implements IDataPosts{
         }
     }
 
-    public Map<String, String> selectAllData(){
-        Map<String, String> hashMap = new HashMap<>();
+    public List<Post> selectAllData(){
+        List<Post> result = new ArrayList<>();
+
         Statement stmt = null;
         try {
             Connection c = connect();
             c.setAutoCommit(false);
 
             stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT name, message FROM public.posts;");
+            ResultSet rs = stmt.executeQuery( "SELECT name, message, data FROM public.posts;");
             while ( rs.next() ) {
                 String  txtName = rs.getString("name");
                 String txtArea  = rs.getString("message");
+                String txtData = rs.getString("data");
 
-                hashMap.put(txtName, txtArea);
+                result.add(new Post(txtName, txtArea, txtData));
             }
 
             rs.close();
@@ -61,7 +66,7 @@ public class DataPosts implements IDataPosts{
             System.exit(0);
         }
 
-        return hashMap;
+        return result;
     }
 
 }

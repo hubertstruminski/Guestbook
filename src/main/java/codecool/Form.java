@@ -1,6 +1,7 @@
 package codecool;
 
 import DAO.DataPosts;
+import Model.Post;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -9,10 +10,7 @@ import org.jtwig.JtwigTemplate;
 
 import java.io.*;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Form implements HttpHandler {
 
@@ -26,13 +24,12 @@ public class Form implements HttpHandler {
 
         // Send a form if it wasn't submitted yet.
         if(method.equals("GET")){
-            Map<String, String> hashMap = dataPosts.selectAllData();
-            Date data = new Date();
+            List<Post> dataList = dataPosts.selectAllData();
 
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/questbook.twig");
             JtwigModel model = JtwigModel.newModel();
-            model.with("hashMap", hashMap);
-            model.with("time", data);
+
+            model.with("list", dataList);
 
             response = template.render(model);
         }
@@ -45,19 +42,23 @@ public class Form implements HttpHandler {
 
             System.out.println(formData);
             Map inputs = parseFormData(formData);
-            dataPosts.insertRecord(inputs.get("txtName").toString(), inputs.get("txtArea").toString());
-//            Map<String, String> hashMap = dataPosts.selectAllData();
-//
-//            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/questbook.twig");
-//            JtwigModel model = JtwigModel.newModel();
-//            model.with("hashMap", hashMap);
-//
-            response = inputs.get("txtName").toString() + inputs.get("txtArea").toString();
-        }
-        Headers headers= httpExchange.getResponseHeaders();
-        headers.add("Content-Type", "text/html");
 
-        httpExchange.sendResponseHeaders(200, response.length());
+            String dataToString = "";
+            Date data = new Date();
+
+            dataPosts.insertRecord(inputs.get("txtName").toString(), inputs.get("txtArea").toString(), data.toGMTString());
+            List<Post> dataList = dataPosts.selectAllData();
+
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/questbook.twig");
+            JtwigModel model = JtwigModel.newModel();
+
+            model.with("list", dataList);
+
+            response = template.render(model);
+        }
+
+
+        httpExchange.sendResponseHeaders(200, response.getBytes("UTF-32").length);
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
         os.close();

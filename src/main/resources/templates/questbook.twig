@@ -7,22 +7,24 @@
     <style>
         .post
         {
-            width: 300px;
-            height: 100px;
+            width: 600px;
+            height: 200px;
             background-color: red;
             color: black;
             font-size: 22px;
+            margin: 15px;
+            padding: 5px;
         }
         .header
         {
-            width: 300px;
-            height: 25px;
+            width: 600px;
+            height: 50px;
             background-color: green;
         }
         .message
         {
-            width: 300px;
-            height: 75px;
+            width: 600px;
+            height: 150px;
             background-color: red;
         }
 
@@ -36,14 +38,14 @@
 
     <div id="container">
 
-        {% for key, value in hashMap %}
+        {% for item in list %}
 
             <div class="post">
                 <div class="header">
-                    {{ key }} - {{ time }}
+                    {{ item.getName() }} - {{ item.getData() }}
                 </div>
                 <div class="message">
-                    {{ value }}
+                    {{ item.getMessage() }}
                 </div>
             </div>
 
